@@ -316,8 +316,7 @@ canvas {
 }
 
 .work-section,
-.capabilities-section,
-.placeholder-section {
+.capabilities-section {
   max-width: var(--container);
   margin: 0 auto;
 }
@@ -939,6 +938,153 @@ canvas {
   font-size: 8px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.section-transition {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: var(--transition-height);
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+.section-transition::after {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(180deg, var(--bg) 0%, transparent 28%, transparent 72%, var(--bg) 100%);
+  content: "";
+  pointer-events: none;
+}
+
+.section-transition::before {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.7'/%3E%3C/svg%3E");
+  content: "";
+  pointer-events: none;
+}
+
+.transition-orb,
+.transition-orb span {
+  position: absolute;
+  display: block;
+  border: 1px solid rgba(141, 124, 255, 0.3);
+  border-radius: 50%;
+}
+
+.transition-orb {
+  width: min(48vw, 620px);
+  aspect-ratio: 1;
+  opacity: 0;
+  transform: scale(1.08) rotate(-15deg);
+  transition: opacity 1400ms var(--ease-out), transform 1800ms var(--ease-out);
+}
+
+.transition-orb span {
+  inset: 14%;
+  border-color: rgba(244, 244, 240, 0.16);
+  transform: rotate(55deg) scaleY(0.52);
+}
+
+.transition-orb::after {
+  position: absolute;
+  inset: 24%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(141, 124, 255, 0.16), transparent 68%);
+  content: "";
+}
+
+.section-transition.is-visible .transition-orb {
+  opacity: 1;
+  transform: scale(1) rotate(18deg);
+}
+
+.transition-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 1400ms var(--ease-out), transform 1800ms var(--ease-out);
+}
+
+.transition-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.section-transition.is-visible .transition-canvas {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.transition-field-fallback {
+  width: min(60vw, 760px);
+  height: 1px;
+  background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(141, 124, 255, 0.35) 15px 16px, transparent 17px 30px);
+  box-shadow: 0 -50px 0 rgba(141, 124, 255, 0.08), 0 50px 0 rgba(141, 124, 255, 0.08);
+  opacity: 0.45;
+  transform: perspective(300px) rotateX(55deg) scale(1.4);
+}
+
+.transition-statement {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0;
+  color: rgba(244, 244, 240, 0.18);
+  font-size: clamp(42px, 7vw, 100px);
+  font-weight: 700;
+  letter-spacing: -0.08em;
+  line-height: 0.86;
+  text-align: center;
+  transform: translateX(calc((var(--scroll-progress, 0) - 0.5) * 30px));
+}
+
+.transition-cinematic {
+  min-height: var(--transition-height);
+  background: #020203;
+}
+
+.cinematic-material {
+  position: absolute;
+  inset: 12% 20%;
+  opacity: 0;
+  background: radial-gradient(ellipse at 45% 55%, rgba(141, 124, 255, 0.18), transparent 36%), linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.06) 48%, transparent 57%);
+  filter: blur(12px);
+  transform: scale(1.12) rotate(-5deg);
+  transition: opacity 1800ms var(--ease-out), transform 2200ms var(--ease-out);
+}
+
+.section-transition.is-visible .cinematic-material {
+  opacity: 0.7;
+  transform: scale(1) rotate(0);
+}
+
+.cinematic-label {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  opacity: 0;
+  color: rgba(244, 244, 240, 0.5);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-align: center;
+  transform: translateY(16px);
+  transition: opacity 1100ms var(--ease-out) 450ms, transform 1100ms var(--ease-out) 450ms;
+}
+
+.section-transition.is-visible .cinematic-label {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .about-section,
@@ -1607,6 +1753,23 @@ canvas {
     opacity: 0.4;
   }
 
+  .section-transition {
+    min-height: min(var(--transition-height), 42vh);
+  }
+
+  .transition-orb {
+    width: 80vw;
+  }
+
+  .transition-statement {
+    padding: 0 var(--page-padding);
+    font-size: clamp(40px, 13vw, 72px);
+  }
+
+  .cinematic-material {
+    inset: 20% 5%;
+  }
+
   .scroll-indicator {
     bottom: 24px;
   }
@@ -1666,5 +1829,19 @@ canvas {
   .capability-item,
   .capability-detail {
     transform: none !important;
+  }
+
+  .section-transition,
+  .section-transition * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .transition-orb,
+  .transition-canvas,
+  .cinematic-material,
+  .cinematic-label {
+    opacity: 1;
+    transform: none;
   }
 }

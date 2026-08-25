@@ -54,10 +54,6 @@ export default function ContactSection({ scrollProgress, scrollVelocity, reduced
 
   return (
     <section ref={reveal.ref} id="contact" className={`contact-section ${reveal.visible ? "is-visible" : ""}`}>
-      <div className="contact-transition" aria-hidden="true">
-        <span>HAVE SOMETHING WORTH BUILDING?</span>
-      </div>
-
       <div className="section-header">
         <span className="section-number">05</span>
         <span className="section-label">CONTACT</span>

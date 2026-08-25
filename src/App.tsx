@@ -9,6 +9,8 @@ import SelectedWork from "./components/work/SelectedWork";
 import Capabilities from "./components/capabilities/Capabilities";
 import AboutSection from "./components/about/AboutSection";
 import ContactSection from "./components/contact/ContactSection";
+import SectionTransition from "./components/transitions/SectionTransition";
+import { transitions } from "./data/transitions";
 
 import "./styles/global.css";
 
@@ -139,12 +141,43 @@ function App() {
           </div>
         </section>
 
+        <SectionTransition
+          {...transitions[0]}
+          scrollProgress={scrollProgress}
+          scrollVelocity={scrollVelocity}
+          reducedMotion={reducedMotion}
+          webgl={webgl}
+        />
   
         <SelectedWork />
 
+        <SectionTransition
+          {...transitions[1]}
+          scrollProgress={scrollProgress}
+          scrollVelocity={scrollVelocity}
+          reducedMotion={reducedMotion}
+          webgl={webgl}
+        />
+
         <Capabilities />
 
+        <SectionTransition
+          {...transitions[2]}
+          scrollProgress={scrollProgress}
+          scrollVelocity={scrollVelocity}
+          reducedMotion={reducedMotion}
+          webgl={webgl}
+        />
+
         <AboutSection
+          scrollProgress={scrollProgress}
+          scrollVelocity={scrollVelocity}
+          reducedMotion={reducedMotion}
+          webgl={webgl}
+        />
+
+        <SectionTransition
+          {...transitions[3]}
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
