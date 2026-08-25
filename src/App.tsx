@@ -7,6 +7,8 @@ import { supportsWebGL } from "./lib/webgl";
 import SmoothScroll from "./components/smooth-scroll/SmoothScroll";
 import SelectedWork from "./components/work/SelectedWork";
 import Capabilities from "./components/capabilities/Capabilities";
+import AboutSection from "./components/about/AboutSection";
+import ContactSection from "./components/contact/ContactSection";
 
 import "./styles/global.css";
 
@@ -15,6 +17,7 @@ function App() {
     useScrollProgress();
 
   const [mobile, setMobile] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [webgl, setWebgl] = useState(true);
 
@@ -39,7 +42,7 @@ function App() {
 
   return (
     <SmoothScroll enabled={!reducedMotion}>
-      <main className="site-shell">
+      <main id="top" className="site-shell">
         {/* ================================
           NAVIGATION
       ================================= */}
@@ -49,14 +52,20 @@ function App() {
             JAI<span className="brand-dot">.</span>
           </a>
 
-          <div className="nav-links">
-            <a href="#work">WORK</a>
-            <a href="#capabilities">CAPABILITIES</a>
-            <a href="#about">ABOUT</a>
-            <a href="#contact">CONTACT</a>
+          <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
+            <a href="#work" onClick={() => setMenuOpen(false)}>WORK</a>
+            <a href="#capabilities" onClick={() => setMenuOpen(false)}>CAPABILITIES</a>
+            <a href="#about" onClick={() => setMenuOpen(false)}>ABOUT</a>
+            <a href="#contact" onClick={() => setMenuOpen(false)}>CONTACT</a>
           </div>
 
-          <button className="menu-button" type="button" aria-label="Open menu">
+          <button
+            className="menu-button"
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((isOpen) => !isOpen)}
+          >
             <span />
             <span />
           </button>
@@ -135,17 +144,19 @@ function App() {
 
         <Capabilities />
 
-        <section id="about" className="placeholder-section">
-          <span>03</span>
+        <AboutSection
+          scrollProgress={scrollProgress}
+          scrollVelocity={scrollVelocity}
+          reducedMotion={reducedMotion}
+          webgl={webgl}
+        />
 
-          <h2>About</h2>
-        </section>
-
-        <section id="contact" className="placeholder-section">
-          <span>04</span>
-
-          <h2>Let's build.</h2>
-        </section>
+        <ContactSection
+          scrollProgress={scrollProgress}
+          scrollVelocity={scrollVelocity}
+          reducedMotion={reducedMotion}
+          webgl={webgl}
+        />
       </main>
     </SmoothScroll>
   );

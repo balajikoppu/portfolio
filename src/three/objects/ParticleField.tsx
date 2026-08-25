@@ -11,10 +11,14 @@ export default function ParticleField({
   const positions = useMemo(() => {
     const values = new Float32Array(count * 3);
 
-    for (let i = 0; i < values.length; i += 3) {
-      values[i] = (Math.random() - 0.5) * 10;
-      values[i + 1] = (Math.random() - 0.5) * 10;
-      values[i + 2] = (Math.random() - 0.5) * 10;
+    for (let i = 0; i < count; i += 1) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const radius = 2.3 + Math.random() * 3.2;
+
+      values[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      values[i * 3 + 1] = radius * Math.cos(phi);
+      values[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
     }
 
     return values;
@@ -28,6 +32,7 @@ export default function ParticleField({
         size={0.018}
         sizeAttenuation
         depthWrite={false}
+        opacity={0.88}
       />
     </Points>
   );
