@@ -49,11 +49,11 @@ function ContactArtifact({ scrollProgress, scrollVelocity, reducedMotion = false
 
 export default function ContactSection({ scrollProgress, scrollVelocity, reducedMotion = false, webgl = true }: ContactSectionProps) {
   const [ctaActive, setCtaActive] = useState(false);
-  const reveal = useReveal<HTMLElement>(0.08);
+  const { ref: revealRef, visible: revealVisible } = useReveal<HTMLElement>(0.08);
   const ctaRef = useMagnetic<HTMLAnchorElement>({ strength: 0.22, radius: 220 });
 
   return (
-    <section ref={reveal.ref} id="contact" className={`contact-section ${reveal.visible ? "is-visible" : ""}`}>
+    <section ref={revealRef} id="contact" className={`contact-section ${revealVisible ? "is-visible" : ""}`}>
       <div className="section-header">
         <span className="section-number">05</span>
         <span className="section-label">CONTACT</span>
@@ -65,13 +65,13 @@ export default function ContactSection({ scrollProgress, scrollVelocity, reduced
         <div className="contact-artifact" aria-hidden="true">
           {webgl ? <Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 4.8], fov: 40 }} gl={{ antialias: true, alpha: true }} frameloop={reducedMotion ? "demand" : "always"}><ContactArtifact scrollProgress={scrollProgress} scrollVelocity={scrollVelocity} reducedMotion={reducedMotion} webgl={webgl} active={ctaActive} /></Canvas> : <div className="contact-artifact-fallback" />}
         </div>
-        <a ref={ctaRef} className="contact-cta" href="mailto:hello@jai.dev" onPointerEnter={() => setCtaActive(true)} onPointerLeave={() => setCtaActive(false)}>
+        <a ref={ctaRef} className="contact-cta" data-cursor="email" href="mailto:hello@jai.dev" onPointerEnter={() => setCtaActive(true)} onPointerLeave={() => setCtaActive(false)}>
           <span>START A CONVERSATION</span><span aria-hidden="true">↗</span>
         </a>
       </div>
 
       <div className="contact-links">
-        <a href="mailto:hello@jai.dev"><span><b>EMAIL</b> hello@jai.dev</span><i aria-hidden="true">↗</i></a>
+        <a href="mailto:hello@jai.dev" data-cursor="email"><span><b>EMAIL</b> hello@jai.dev</span><i aria-hidden="true">↗</i></a>
         <span><span><b>LOCATION</b> India</span></span>
       </div>
 

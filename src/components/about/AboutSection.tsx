@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 import { useMagnetic } from "../../hooks/useMagnetic";
 import { useReveal } from "../../hooks/useReveal";
+import { nowItems, systemStatus } from "../../data/site";
 
 type AboutSectionProps = {
   scrollProgress: React.MutableRefObject<number>;
@@ -63,18 +64,18 @@ function PhilosophyRow({ number, children }: { number: string; children: string 
 }
 
 export default function AboutSection({ scrollProgress, scrollVelocity, reducedMotion = false, webgl = true }: AboutSectionProps) {
-  const sectionReveal = useReveal<HTMLElement>(0.08);
-  const statementReveal = useReveal<HTMLDivElement>(0.12);
+  const { ref: sectionRef, visible: sectionVisible } = useReveal<HTMLElement>(0.08);
+  const { ref: statementRef, visible: statementVisible } = useReveal<HTMLDivElement>(0.12);
 
   return (
-    <section ref={sectionReveal.ref} id="about" className={`about-section ${sectionReveal.visible ? "is-visible" : ""}`}>
+    <section ref={sectionRef} id="about" className={`about-section ${sectionVisible ? "is-visible" : ""}`}>
       <div className="section-header">
         <span className="section-number">04</span>
         <span className="section-label">ABOUT</span>
       </div>
 
       <div className="about-grid">
-        <div ref={statementReveal.ref} className={`about-statement ${statementReveal.visible ? "is-visible" : ""}`}>
+        <div ref={statementRef} className={`about-statement ${statementVisible ? "is-visible" : ""}`}>
           <h2>
             <span>I BUILD</span>
             <span className="about-outline">DIGITAL</span>
@@ -101,6 +102,16 @@ export default function AboutSection({ scrollProgress, scrollVelocity, reducedMo
             <PhilosophyRow number="03">TECHNOLOGY SHOULD FEEL HUMAN</PhilosophyRow>
             <PhilosophyRow number="04">EVERY INTERACTION HAS A PURPOSE</PhilosophyRow>
           </div>
+
+          <div className="now-block">
+            <p className="about-subhead">NOW</p>
+            {nowItems.map((item) => (
+              <div className="now-row" key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -108,6 +119,12 @@ export default function AboutSection({ scrollProgress, scrollVelocity, reducedMo
         <span><b>BASED IN</b> INDIA</span>
         <span><b>FOCUS</b> DIGITAL PRODUCTS / CREATIVE TECHNOLOGY</span>
         <span><b>CURRENTLY</b> BUILDING / EXPERIMENTING</span>
+      </div>
+
+      <div className="system-status">
+        {systemStatus.map((item) => (
+          <span key={item.label}><b>{item.label}</b>{item.value}</span>
+        ))}
       </div>
     </section>
   );

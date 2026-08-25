@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { projects } from "../../data/projects";
 import ProjectPreview from "./ProjectPreview";
+import ProjectUniverse from "./ProjectUniverse";
 import Reveal from "../ui/Reveal";
 
 export default function SelectedWork() {
@@ -59,13 +60,17 @@ export default function SelectedWork() {
         </Reveal>
       </div>
 
+      <ProjectUniverse />
+
       <div className="project-list">
         {projects.map((project, index) => (
           <Reveal key={project.id} delay={index * 90}>
             <article
+              id={project.id}
               className="project-row"
               key={project.id}
               tabIndex={0}
+              data-cursor="view"
               onPointerEnter={() => setActiveProject(project.id)}
               onPointerLeave={() => setActiveProject(null)}
               onFocus={() => setActiveProject(project.id)}

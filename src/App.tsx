@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import HeroScene from "./three/scenes/HeroScene";
-import { useScrollProgress } from "./hooks/useScrollProgress";
-import { isMobileDevice } from "./lib/device";
-import { supportsWebGL } from "./lib/webgl";
+import { useExperience } from "./experience/useExperience";
 import SmoothScroll from "./components/smooth-scroll/SmoothScroll";
 import SelectedWork from "./components/work/SelectedWork";
 import Capabilities from "./components/capabilities/Capabilities";
@@ -11,40 +9,30 @@ import AboutSection from "./components/about/AboutSection";
 import ContactSection from "./components/contact/ContactSection";
 import SectionTransition from "./components/transitions/SectionTransition";
 import { transitions } from "./data/transitions";
+import GlobalCursor from "./experience/cursor/GlobalCursor";
+import CommandPalette from "./components/ui/CommandPalette";
 
 import "./styles/global.css";
 
 function App() {
-  const { progress: scrollProgress, velocity: scrollVelocity } =
-    useScrollProgress();
-
-  const [mobile, setMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [webgl, setWebgl] = useState(true);
-
-  useEffect(() => {
-    setMobile(isMobileDevice());
-    setWebgl(supportsWebGL());
-
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const updateMotionPreference = () => {
-      setReducedMotion(mediaQuery.matches);
-    };
-
-    updateMotionPreference();
-
-    mediaQuery.addEventListener("change", updateMotionPreference);
-
-    return () => {
-      mediaQuery.removeEventListener("change", updateMotionPreference);
-    };
-  }, []);
+  const {
+    mobile,
+    finePointer,
+    reducedMotion,
+    webgl,
+    quality,
+    experimental,
+    scrollProgress,
+    scrollVelocity,
+  } = useExperience();
+  const enhancedWebgl = webgl && quality !== "low";
 
   return (
     <SmoothScroll enabled={!reducedMotion}>
-      <main id="top" className="site-shell">
+      <GlobalCursor enabled={finePointer && quality !== "low"} />
+      <CommandPalette />
+      <main id="top" className={`site-shell ${experimental ? "is-experimental" : ""}`}>
         {/* ================================
           NAVIGATION
       ================================= */}
@@ -102,7 +90,7 @@ function App() {
                 useful and unmistakably human.
               </p>
 
-              <a href="#work" className="primary-link">
+              <a href="#work" className="primary-link" data-cursor="explore">
                 <span>Explore work</span>
                 <span>↗</span>
               </a>
@@ -114,7 +102,7 @@ function App() {
         ================================= */}
 
           <div className="hero-object" aria-hidden="true">
-            {webgl ? (
+              {enhancedWebgl ? (
               <HeroScene
                 scrollProgress={scrollProgress}
                 scrollVelocity={scrollVelocity}
@@ -146,7 +134,7 @@ function App() {
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
-          webgl={webgl}
+          webgl={enhancedWebgl}
         />
   
         <SelectedWork />
@@ -156,7 +144,7 @@ function App() {
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
-          webgl={webgl}
+          webgl={enhancedWebgl}
         />
 
         <Capabilities />
@@ -166,14 +154,14 @@ function App() {
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
-          webgl={webgl}
+          webgl={enhancedWebgl}
         />
 
         <AboutSection
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
-          webgl={webgl}
+          webgl={enhancedWebgl}
         />
 
         <SectionTransition
@@ -181,14 +169,14 @@ function App() {
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
-          webgl={webgl}
+          webgl={enhancedWebgl}
         />
 
         <ContactSection
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
-          webgl={webgl}
+          webgl={enhancedWebgl}
         />
       </main>
     </SmoothScroll>

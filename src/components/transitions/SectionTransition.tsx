@@ -17,16 +17,16 @@ export type SectionTransitionProps = {
 };
 
 export default function SectionTransition({ id, variant, height, statement, scrollProgress, scrollVelocity, reducedMotion = false, webgl = true }: SectionTransitionProps) {
-  const reveal = useReveal<HTMLElement>(0.05);
+  const { ref: revealRef, visible: revealVisible } = useReveal<HTMLElement>(0.05);
   const isGenerative = variant === "generative";
 
   useEffect(() => {
-    if (!reveal.ref.current || variant !== "statement") {
+    if (!revealRef.current || variant !== "statement") {
       return;
     }
 
     let frame = 0;
-    const element = reveal.ref.current;
+    const element = revealRef.current;
 
     const update = () => {
       element.style.setProperty("--scroll-progress", `${scrollProgress.current}`);
@@ -36,13 +36,13 @@ export default function SectionTransition({ id, variant, height, statement, scro
     frame = requestAnimationFrame(update);
 
     return () => cancelAnimationFrame(frame);
-  }, [reveal.ref, scrollProgress, variant]);
+  }, [revealRef, scrollProgress, variant]);
 
   return (
     <section
-      ref={reveal.ref}
+      ref={revealRef}
       id={id}
-      className={`section-transition transition-${variant} ${reveal.visible ? "is-visible" : ""}`}
+      className={`section-transition transition-${variant} ${revealVisible ? "is-visible" : ""}`}
       style={{ "--transition-height": height } as React.CSSProperties}
       aria-hidden="true"
     >

@@ -3,13 +3,10 @@ import {
   useRef,
 } from "react";
 
-import { useScrollProgress } from "./useScrollProgress";
+import { useExperience } from "../experience/useExperience";
 
 export function useCapabilitiesMotion() {
-  const {
-    progress,
-    velocity,
-  } = useScrollProgress();
+  const { scrollProgress: progress, scrollVelocity: velocity } = useExperience();
 
   const sectionRef =
     useRef<HTMLElement | null>(null);
