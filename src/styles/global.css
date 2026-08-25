@@ -2168,6 +2168,117 @@ h3 {
     scale(1);
 }
 
+
+
+/* =========================================================
+   PHASE 4 — MAGNETIC CAPABILITY INTERACTION
+========================================================= */
+
 .capability-item {
-  transform: none !important;
+  transform:
+    translate3d(
+      var(--magnetic-x, 0px),
+      calc(
+        var(--magnetic-y, 0px) +
+        var(--scroll-offset, 0px)
+      ),
+      0
+    );
+
+  will-change: transform;
+
+  transition:
+    color 450ms var(--ease-out),
+    padding 500ms var(--ease-out),
+    border-color 450ms var(--ease-out);
+}
+
+/* Active magnetic indicator */
+
+.capability-item::after {
+  position: absolute;
+
+  top: 50%;
+  right: 30px;
+
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+
+  content: "";
+
+  opacity: 0;
+
+  transform:
+    translate3d(
+      10px,
+      -50%,
+      0
+    )
+    scale(0.3);
+
+  transition:
+    opacity 400ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+
+.capability-item:hover::after,
+.capability-item.is-active::after {
+  opacity: 1;
+
+  transform:
+    translate3d(
+      0,
+      -50%,
+      0
+    )
+    scale(1);
+}
+
+/* Better active title response */
+
+.capability-item.is-active
+.capability-title {
+  text-shadow:
+    0 0 35px
+    rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .capability-item {
+    --magnetic-x: 0px;
+    --magnetic-y: 0px;
+    --scroll-offset: 0px;
+
+    transform: none !important;
+  }
+
+  .capability-item::after {
+    display: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .capability-item {
+    --magnetic-x: 0px;
+    --magnetic-y: 0px;
+    --scroll-offset: 0px;
+
+    transform: none !important;
+  }
+
+  .capability-item::after {
+    display: none;
+  }
 }

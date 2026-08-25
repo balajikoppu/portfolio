@@ -79,8 +79,6 @@ export default function Capabilities() {
       id="capabilities"
       className="capabilities-section"
     >
-      {/* SECTION HEADER */}
-
       <div className="capabilities-header">
         <span className="section-number">
           03
@@ -90,8 +88,6 @@ export default function Capabilities() {
           CAPABILITIES
         </span>
       </div>
-
-      {/* INTRO */}
 
       <div className="capabilities-intro">
         <p className="capabilities-kicker">
@@ -106,10 +102,7 @@ export default function Capabilities() {
                   element;
               }
             }}
-            className="
-              capability-word
-              capability-word-one
-            "
+            className="capability-word capability-word-one"
           >
             IDEAS
           </span>
@@ -123,10 +116,7 @@ export default function Capabilities() {
                   element;
               }
             }}
-            className="
-              capability-word
-              capability-word-two
-            "
+            className="capability-word capability-word-two"
           >
             INTO
           </span>
@@ -140,17 +130,12 @@ export default function Capabilities() {
                   element;
               }
             }}
-            className="
-              capability-word
-              capability-word-three
-            "
+            className="capability-word capability-word-three"
           >
             SYSTEMS.
           </span>
         </h2>
       </div>
-
-      {/* CAPABILITIES STAGE */}
 
       <div className="capabilities-stage">
         <div className="capabilities-list">
@@ -178,8 +163,6 @@ export default function Capabilities() {
           )}
         </div>
 
-        {/* ACTIVE DETAIL */}
-
         <div
           ref={detailRef}
           className="capability-detail"
@@ -203,8 +186,6 @@ export default function Capabilities() {
           </div>
         </div>
       </div>
-
-      {/* FOOTER */}
 
       <div className="capabilities-footer">
         <span>

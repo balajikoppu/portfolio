@@ -6,8 +6,10 @@ import {
 import { useScrollProgress } from "./useScrollProgress";
 
 export function useCapabilitiesMotion() {
-  const { progress, velocity } =
-    useScrollProgress();
+  const {
+    progress,
+    velocity,
+  } = useScrollProgress();
 
   const sectionRef =
     useRef<HTMLElement | null>(null);
@@ -38,39 +40,39 @@ export function useCapabilitiesMotion() {
       const rect =
         section.getBoundingClientRect();
 
-      /*
-       * Only animate while the section is
-       * reasonably close to the viewport.
-       */
-
       const viewportHeight =
         window.innerHeight;
 
-      const visible =
+      const isVisible =
         rect.bottom > -200 &&
-        rect.top < viewportHeight + 200;
+        rect.top <
+          viewportHeight + 200;
 
-      if (visible) {
+      if (isVisible) {
         const scroll =
           progress.current;
 
-        const speed =
-          Math.max(
-            -15,
-            Math.min(
-              15,
-              velocity.current,
-            ),
-          );
+        const speed = Math.max(
+          -15,
+          Math.min(
+            15,
+            velocity.current,
+          ),
+        );
 
-        /*
-         * Large typography movement.
-         */
+        /* ---------------------------------
+           TYPOGRAPHY
+        --------------------------------- */
 
         const wordOffsets = [
-          -scroll * 18 + speed * 0.35,
-          scroll * 13 - speed * 0.25,
-          -scroll * 9 + speed * 0.18,
+          -scroll * 18 +
+            speed * 0.35,
+
+          scroll * 13 -
+            speed * 0.25,
+
+          -scroll * 9 +
+            speed * 0.18,
         ];
 
         wordsRef.current.forEach(
@@ -79,18 +81,24 @@ export function useCapabilitiesMotion() {
               return;
             }
 
-            const offset =
-              wordOffsets[index] ?? 0;
-
             word.style.transform =
-              `translate3d(${offset}px, 0, 0)`;
+              `translate3d(
+                ${wordOffsets[index] ?? 0}px,
+                0,
+                0
+              )`;
           },
         );
 
-        /*
-         * Capability rows get tiny
-         * independent vertical movement.
-         */
+        /* ---------------------------------
+           CAPABILITY ROWS
+
+           Do NOT write transform here.
+           Magnetic interaction owns transform.
+
+           Instead expose scroll movement
+           through a CSS variable.
+        --------------------------------- */
 
         rowsRef.current.forEach(
           (row, index) => {
@@ -106,28 +114,30 @@ export function useCapabilitiesMotion() {
 
             row.style.setProperty(
               "--scroll-offset",
-              `${offset}px`
+              `${offset}px`,
             );
           },
         );
 
-        /*
-         * Detail panel responds subtly
-         * to scroll velocity.
-         */
+        /* ---------------------------------
+           DETAIL PANEL
+        --------------------------------- */
 
         if (detailRef.current) {
-          const panelY =
-            Math.max(
-              -4,
-              Math.min(
-                4,
-                speed * 0.18,
-              ),
-            );
+          const panelY = Math.max(
+            -4,
+            Math.min(
+              4,
+              speed * 0.18,
+            ),
+          );
 
           detailRef.current.style.transform =
-            `translate3d(0, ${panelY}px, 0)`;
+            `translate3d(
+              0,
+              ${panelY}px,
+              0
+            )`;
         }
       }
 

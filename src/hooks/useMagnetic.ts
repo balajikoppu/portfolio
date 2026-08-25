@@ -1,18 +1,19 @@
-import { useEffect, useRef } from "react";
+import {
+  useEffect,
+  useRef,
+} from "react";
 
 interface MagneticOptions {
   strength?: number;
   radius?: number;
 }
 
-export function useMagnetic<T extends HTMLElement>(
-  options: MagneticOptions = {},
-) {
-  const {
-    strength = 0.22,
-    radius = 140,
-  } = options;
-
+export function useMagnetic<
+  T extends HTMLElement,
+>({
+  strength = 0.16,
+  radius = 180,
+}: MagneticOptions = {}) {
   const elementRef =
     useRef<T | null>(null);
 
@@ -24,12 +25,12 @@ export function useMagnetic<T extends HTMLElement>(
       return;
     }
 
-    const mediaQuery =
+    const pointerQuery =
       window.matchMedia(
         "(pointer: fine)",
       );
 
-    if (!mediaQuery.matches) {
+    if (!pointerQuery.matches) {
       return;
     }
 
@@ -59,16 +60,14 @@ export function useMagnetic<T extends HTMLElement>(
       const distanceY =
         event.clientY - centerY;
 
-      const distance =
-        Math.sqrt(
-          distanceX * distanceX +
-            distanceY * distanceY,
-        );
+      const distance = Math.sqrt(
+        distanceX * distanceX +
+          distanceY * distanceY,
+      );
 
-      if (distance > radius) {
+      if (distance >= radius) {
         targetX = 0;
         targetY = 0;
-
         return;
       }
 
@@ -86,11 +85,10 @@ export function useMagnetic<T extends HTMLElement>(
         influence;
     };
 
-    const handlePointerLeave =
-      () => {
-        targetX = 0;
-        targetY = 0;
-      };
+    const reset = () => {
+      targetX = 0;
+      targetY = 0;
+    };
 
     const animate = () => {
       currentX +=
@@ -123,7 +121,7 @@ export function useMagnetic<T extends HTMLElement>(
 
     element.addEventListener(
       "pointerleave",
-      handlePointerLeave,
+      reset,
     );
 
     frame =
@@ -137,7 +135,7 @@ export function useMagnetic<T extends HTMLElement>(
 
       element.removeEventListener(
         "pointerleave",
-        handlePointerLeave,
+        reset,
       );
 
       cancelAnimationFrame(frame);
