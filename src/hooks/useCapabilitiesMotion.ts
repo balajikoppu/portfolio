@@ -104,8 +104,10 @@ export function useCapabilitiesMotion() {
                   index * 0.9,
               ) * 2.5;
 
-            row.style.transform =
-              `translate3d(0, ${offset}px, 0)`;
+            row.style.setProperty(
+              "--scroll-offset",
+              `${offset}px`
+            );
           },
         );
 

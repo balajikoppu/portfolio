@@ -2,6 +2,60 @@ import { useState } from "react";
 
 import { capabilities } from "../../data/capabilities";
 import { useCapabilitiesMotion } from "../../hooks/useCapabilitiesMotion";
+import { useMagnetic } from "../../hooks/useMagnetic";
+
+interface CapabilityRowProps {
+  capability: (typeof capabilities)[number];
+  active: boolean;
+  onActivate: () => void;
+  rowRef: (
+    element: HTMLButtonElement | null,
+  ) => void;
+}
+
+function CapabilityRow({
+  capability,
+  active,
+  onActivate,
+  rowRef,
+}: CapabilityRowProps) {
+  const magneticRef =
+    useMagnetic<HTMLButtonElement>({
+      strength: 0.16,
+      radius: 180,
+    });
+
+  return (
+    <button
+      ref={(element) => {
+        magneticRef.current = element;
+        rowRef(element);
+      }}
+      type="button"
+      className={`capability-item ${
+        active ? "is-active" : ""
+      }`}
+      onMouseEnter={onActivate}
+      onFocus={onActivate}
+      onClick={onActivate}
+    >
+      <span className="capability-number">
+        {capability.number}
+      </span>
+
+      <span className="capability-title">
+        {capability.title}
+      </span>
+
+      <span
+        className="capability-symbol"
+        aria-hidden="true"
+      >
+        ↗
+      </span>
+    </button>
+  );
+}
 
 export default function Capabilities() {
   const [activeId, setActiveId] =
@@ -25,9 +79,7 @@ export default function Capabilities() {
       id="capabilities"
       className="capabilities-section"
     >
-      {/* =====================================================
-          SECTION HEADER
-      ===================================================== */}
+      {/* SECTION HEADER */}
 
       <div className="capabilities-header">
         <span className="section-number">
@@ -39,9 +91,7 @@ export default function Capabilities() {
         </span>
       </div>
 
-      {/* =====================================================
-          INTRO
-      ===================================================== */}
+      {/* INTRO */}
 
       <div className="capabilities-intro">
         <p className="capabilities-kicker">
@@ -100,70 +150,35 @@ export default function Capabilities() {
         </h2>
       </div>
 
-      {/* =====================================================
-          CAPABILITIES STAGE
-      ===================================================== */}
+      {/* CAPABILITIES STAGE */}
 
       <div className="capabilities-stage">
-        {/* ===================================================
-            CAPABILITY LIST
-        =================================================== */}
-
         <div className="capabilities-list">
           {capabilities.map(
             (capability, index) => (
-              <button
-                ref={(element) => {
+              <CapabilityRow
+                key={capability.id}
+                capability={capability}
+                active={
+                  activeId === capability.id
+                }
+                onActivate={() =>
+                  setActiveId(
+                    capability.id,
+                  )
+                }
+                rowRef={(element) => {
                   if (element) {
                     rowsRef.current[index] =
                       element;
                   }
                 }}
-                key={capability.id}
-                type="button"
-                className={`capability-item ${
-                  activeId === capability.id
-                    ? "is-active"
-                    : ""
-                }`}
-                onMouseEnter={() =>
-                  setActiveId(
-                    capability.id,
-                  )
-                }
-                onFocus={() =>
-                  setActiveId(
-                    capability.id,
-                  )
-                }
-                onClick={() =>
-                  setActiveId(
-                    capability.id,
-                  )
-                }
-              >
-                <span className="capability-number">
-                  {capability.number}
-                </span>
-
-                <span className="capability-title">
-                  {capability.title}
-                </span>
-
-                <span
-                  className="capability-symbol"
-                  aria-hidden="true"
-                >
-                  ↗
-                </span>
-              </button>
+              />
             ),
           )}
         </div>
 
-        {/* ===================================================
-            ACTIVE DETAIL
-        =================================================== */}
+        {/* ACTIVE DETAIL */}
 
         <div
           ref={detailRef}
@@ -189,18 +204,14 @@ export default function Capabilities() {
         </div>
       </div>
 
-      {/* =====================================================
-          FOOTER
-      ===================================================== */}
+      {/* FOOTER */}
 
       <div className="capabilities-footer">
         <span>
           SOFTWARE × INTELLIGENCE × SYSTEMS
         </span>
 
-        <span>
-          2026
-        </span>
+        <span>2026</span>
       </div>
     </section>
   );
