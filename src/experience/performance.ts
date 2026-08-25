@@ -13,11 +13,11 @@ export function getExperienceQuality({
   webgl: boolean;
   hardwareConcurrency: number;
 }): ExperienceQuality {
-  if (reducedMotion || !webgl || !finePointer) {
+  if (reducedMotion || !webgl) {
     return "low";
   }
 
-  if (mobile || hardwareConcurrency <= 4) {
+  if (mobile || !finePointer || hardwareConcurrency <= 4) {
     return "medium";
   }
 
