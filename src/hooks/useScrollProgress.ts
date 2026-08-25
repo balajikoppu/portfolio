@@ -10,23 +10,32 @@ export function useScrollProgress() {
 
     const update = () => {
       const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
+        document.documentElement.scrollHeight -
+        window.innerHeight;
 
       const currentScroll = window.scrollY;
 
       progress.current =
-        maxScroll > 0 ? currentScroll / maxScroll : 0;
+        maxScroll > 0
+          ? currentScroll / maxScroll
+          : 0;
 
-      velocity.current = currentScroll - lastScroll.current;
+      velocity.current =
+        currentScroll -
+        lastScroll.current;
 
-      lastScroll.current = currentScroll;
+      lastScroll.current =
+        currentScroll;
 
-      frame = requestAnimationFrame(update);
+      frame =
+        requestAnimationFrame(update);
     };
 
-    frame = requestAnimationFrame(update);
+    frame =
+      requestAnimationFrame(update);
 
-    return () => cancelAnimationFrame(frame);
+    return () =>
+      cancelAnimationFrame(frame);
   }, []);
 
   return {
