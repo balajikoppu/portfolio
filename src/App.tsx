@@ -50,9 +50,10 @@ function App() {
           </a>
 
           <div className="nav-links">
-            <a href="#work">Work</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+            <a href="#work">WORK</a>
+            <a href="#capabilities">CAPABILITIES</a>
+            <a href="#about">ABOUT</a>
+            <a href="#contact">CONTACT</a>
           </div>
 
           <button className="menu-button" type="button" aria-label="Open menu">
@@ -67,16 +68,15 @@ function App() {
 
         <section className="hero-preview">
           <div className="hero-meta">
-            <span>SOFTWARE DEVELOPER</span>
-
-            <span>AI × DIGITAL EXPERIENCES</span>
+            <span>01</span>
+            <span>CREATIVE DEVELOPER / DIGITAL DESIGNER</span>
           </div>
 
           <div className="hero-content">
             <p className="eyebrow">01 — INTRODUCTION</p>
 
             <h1>
-              I BUILD
+              BUILDING
               <br />
               <span>DIGITAL</span>
               <br />
@@ -86,9 +86,9 @@ function App() {
 
             <div className="hero-bottom">
               <p>
-                Software, AI and engineering
+                I design and engineer systems that feel premium,
                 <br />
-                shaped into meaningful products.
+                useful and unmistakably human.
               </p>
 
               <a href="#work" className="primary-link">
