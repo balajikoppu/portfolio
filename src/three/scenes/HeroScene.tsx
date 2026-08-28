@@ -73,6 +73,7 @@ export default function HeroScene({
           scrollProgress={scrollProgress}
           scrollVelocity={scrollVelocity}
           reducedMotion={reducedMotion}
+          mobile={mobile}
         />
       </Float>
 

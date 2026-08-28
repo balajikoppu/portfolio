@@ -5,6 +5,9 @@ import * as THREE from "three";
 import { useMagnetic } from "../../hooks/useMagnetic";
 import { useReveal } from "../../hooks/useReveal";
 import { nowItems, systemStatus } from "../../data/site";
+import { story } from "../../data/story";
+import StorybookMoment from "../transitions/StorybookMoment";
+import ViewportPresence from "../ui/ViewportPresence";
 
 type AboutSectionProps = {
   scrollProgress: React.MutableRefObject<number>;
@@ -74,6 +77,11 @@ export default function AboutSection({ scrollProgress, scrollVelocity, reducedMo
         <span className="section-label">ABOUT</span>
       </div>
 
+      <StorybookMoment label="JOURNAL ENTRY / 04" title="STILL BUILDING" metadata="WEATHER APP → INTERFACES → FRONTEND → BACKEND → SYSTEMS → AI → AUTOMOTIVE">
+        <p>I didn&apos;t plan this path.</p>
+        <p>Each project simply gave me a better question.</p>
+      </StorybookMoment>
+
       <div className="about-grid">
         <div ref={statementRef} className={`about-statement ${statementVisible ? "is-visible" : ""}`}>
           <h2>
@@ -83,17 +91,19 @@ export default function AboutSection({ scrollProgress, scrollVelocity, reducedMo
           </h2>
           <div className="about-artifact" aria-hidden="true">
             {webgl ? (
-              <Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 4.5], fov: 38 }} gl={{ antialias: true, alpha: true }} frameloop={reducedMotion ? "demand" : "always"}>
-                <AboutArtifact scrollProgress={scrollProgress} scrollVelocity={scrollVelocity} reducedMotion={reducedMotion} />
-              </Canvas>
+              <ViewportPresence>
+                <Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 4.5], fov: 38 }} gl={{ antialias: true, alpha: true }} frameloop={reducedMotion ? "demand" : "always"}>
+                  <AboutArtifact scrollProgress={scrollProgress} scrollVelocity={scrollVelocity} reducedMotion={reducedMotion} />
+                </Canvas>
+              </ViewportPresence>
             ) : <div className="about-artifact-fallback" />}
           </div>
         </div>
 
         <div className="about-narrative">
-          <div className="about-copy-block"><span>01 — WHO</span><p>I am Jai, a creative developer building at the meeting point of software, intelligence and considered interaction.</p></div>
-          <div className="about-copy-block"><span>02 — HOW</span><p>I move from design to systems to engineering, then iterate until the idea feels simple, useful and exact.</p></div>
-          <div className="about-copy-block"><span>03 — WHY</span><p>Because good technology should disappear into the experience while leaving a clear impression behind.</p></div>
+          <div className="about-copy-block"><span>01 — WHO</span><p>I started as a curious engineering student, trying to understand how simple ideas became things people could use.</p></div>
+          <div className="about-copy-block"><span>02 — HOW</span><p>I move from interface to system: design, structure, engineering, iteration. I want to understand both what people see and what makes it work.</p></div>
+          <div className="about-copy-block"><span>03 — WHY</span><p>I do not just want to write code. I want to understand what I am building and why it should exist.</p></div>
 
           <div className="about-philosophy">
             <p className="about-subhead">WORKING PHILOSOPHY</p>
@@ -112,6 +122,7 @@ export default function AboutSection({ scrollProgress, scrollVelocity, reducedMo
               </div>
             ))}
           </div>
+
         </div>
       </div>
 
@@ -125,6 +136,12 @@ export default function AboutSection({ scrollProgress, scrollVelocity, reducedMo
         {systemStatus.map((item) => (
           <span key={item.label}><b>{item.label}</b>{item.value}</span>
         ))}
+      </div>
+
+      <div className="about-direction">
+        <p>{story.direction.copy}</p>
+        <p>{story.direction.interests}</p>
+        <strong>{story.direction.ongoing}</strong>
       </div>
     </section>
   );

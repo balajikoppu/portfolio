@@ -4,6 +4,8 @@ import * as THREE from "three";
 
 import { useMagnetic } from "../../hooks/useMagnetic";
 import { useReveal } from "../../hooks/useReveal";
+import { story } from "../../data/story";
+import ViewportPresence from "../ui/ViewportPresence";
 
 type ContactSectionProps = {
   scrollProgress: React.MutableRefObject<number>;
@@ -62,8 +64,12 @@ export default function ContactSection({ scrollProgress, scrollVelocity, reduced
       <div className="contact-content">
         <p className="contact-kicker">NOW LET&apos;S MAKE IT REAL</p>
         <h2><span>LET&apos;S BUILD</span><br /><span>SOMETHING</span><br /><strong>MEMORABLE.</strong></h2>
+        <div className="contact-story">
+          <p>{story.contact.copy}</p>
+          <p>{story.contact.invitation}</p>
+        </div>
         <div className="contact-artifact" aria-hidden="true">
-          {webgl ? <Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 4.8], fov: 40 }} gl={{ antialias: true, alpha: true }} frameloop={reducedMotion ? "demand" : "always"}><ContactArtifact scrollProgress={scrollProgress} scrollVelocity={scrollVelocity} reducedMotion={reducedMotion} webgl={webgl} active={ctaActive} /></Canvas> : <div className="contact-artifact-fallback" />}
+          {webgl ? <ViewportPresence><Canvas dpr={[1, 1.3]} camera={{ position: [0, 0, 4.8], fov: 40 }} gl={{ antialias: true, alpha: true }} frameloop={reducedMotion ? "demand" : "always"}><ContactArtifact scrollProgress={scrollProgress} scrollVelocity={scrollVelocity} reducedMotion={reducedMotion} webgl={webgl} active={ctaActive} /></Canvas></ViewportPresence> : <div className="contact-artifact-fallback" />}
         </div>
         <a ref={ctaRef} className="contact-cta" data-cursor="email" href="mailto:hello@jai.dev" onPointerEnter={() => setCtaActive(true)} onPointerLeave={() => setCtaActive(false)}>
           <span>START A CONVERSATION</span><span aria-hidden="true">↗</span>
@@ -79,6 +85,7 @@ export default function ContactSection({ scrollProgress, scrollVelocity, reduced
         <div><strong>JAI<span className="brand-dot">.</span></strong><span>DIGITAL EXPERIENCES</span><span>© 2026</span></div>
         <a href="#top" className="back-to-top">↑ <span>BACK TO TOP</span></a>
         <span>BUILT WITH INTENTION.</span>
+        <span>{story.contact.ending}</span>
       </footer>
     </section>
   );

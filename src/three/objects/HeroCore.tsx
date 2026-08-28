@@ -2,177 +2,240 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 
+import HeroMediaPanel from "./HeroMediaPanel";
+
 type HeroCoreProps = {
   scrollProgress: React.MutableRefObject<number>;
   scrollVelocity: React.MutableRefObject<number>;
   reducedMotion?: boolean;
+  gifSrc?: string;
 };
 
 export default function HeroCore({
   scrollProgress,
   scrollVelocity,
   reducedMotion = false,
+  gifSrc,
 }: HeroCoreProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const coreRef = useRef<THREE.Mesh>(null);
-  const shellRef = useRef<THREE.Mesh>(null);
-  const haloRef = useRef<THREE.Mesh>(null);
-  const ringRef = useRef<THREE.Mesh>(null);
-  const innerRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (
-      !groupRef.current ||
-      !coreRef.current ||
-      !shellRef.current ||
-      !haloRef.current ||
-      !ringRef.current ||
-      !innerRef.current
-    ) {
-      return;
-    }
+    const group = groupRef.current;
 
-    const time = state.clock.elapsedTime;
-    const scroll = scrollProgress.current;
+    if (!group) return;
+
+    const scroll = THREE.MathUtils.clamp(scrollProgress.current, 0, 1);
     const velocity = scrollVelocity.current;
-    const pointerX = state.pointer.x;
-    const pointerY = state.pointer.y;
 
+    /*
+     * ------------------------------------------------------------
+     * POINTER
+     * ------------------------------------------------------------
+     * Clamp the pointer so extreme mouse positions do not create
+     * excessive movement.
+     */
+    const pointerX = THREE.MathUtils.clamp(state.pointer.x, -1, 1);
+    const pointerY = THREE.MathUtils.clamp(state.pointer.y, -1, 1);
+
+    /*
+     * ------------------------------------------------------------
+     * REDUCED MOTION
+     * ------------------------------------------------------------
+     * Keep the object stable when reduced motion is requested.
+     */
     if (reducedMotion) {
-      coreRef.current.rotation.x = time * 0.08;
-      coreRef.current.rotation.y = time * 0.1;
-      shellRef.current.rotation.x = -time * 0.06;
-      shellRef.current.rotation.z = time * 0.08;
-      ringRef.current.rotation.x = time * 0.3;
-      ringRef.current.rotation.y = time * 0.35;
+      group.rotation.x = THREE.MathUtils.lerp(
+        group.rotation.x,
+        0,
+        0.08,
+      );
+
+      group.rotation.y = THREE.MathUtils.lerp(
+        group.rotation.y,
+        0,
+        0.08,
+      );
+
+      group.rotation.z = THREE.MathUtils.lerp(
+        group.rotation.z,
+        0,
+        0.08,
+      );
+
+      group.position.x = THREE.MathUtils.lerp(
+        group.position.x,
+        0,
+        0.08,
+      );
+
+      group.position.y = THREE.MathUtils.lerp(
+        group.position.y,
+        0,
+        0.08,
+      );
+
+      group.scale.lerp(
+        new THREE.Vector3(1, 1, 1),
+        0.08,
+      );
+
       return;
     }
 
-    const targetRotationX = pointerY * 0.28 + scroll * 1.2;
-    const targetRotationY = pointerX * 0.38 + scroll * 2.1;
-    const targetPositionX = scroll * 1.25;
-    const targetPositionY = -scroll * 0.5;
+    /*
+     * ------------------------------------------------------------
+     * IDLE MOTION
+     * ------------------------------------------------------------
+     * Very subtle breathing/orbital movement.
+     *
+     * This keeps the sphere from feeling like a static image
+     * while avoiding obvious "floating object" animation.
+     */
+    const time = state.clock.elapsedTime;
+
+    const idleRotationX = Math.sin(time * 0.35) * 0.018;
+    const idleRotationY = Math.cos(time * 0.28) * 0.025;
+
+    const idlePositionY = Math.sin(time * 0.45) * 0.018;
+
+    /*
+     * ------------------------------------------------------------
+     * POINTER ROTATION
+     * ------------------------------------------------------------
+     * Mouse movement creates a subtle 3D depth response.
+     */
+    const pointerRotationX = pointerY * 0.16;
+    const pointerRotationY = pointerX * 0.24;
+
+    /*
+     * ------------------------------------------------------------
+     * SCROLL ROTATION
+     * ------------------------------------------------------------
+     * Scroll adds controlled movement to the object.
+     *
+     * Reduced from the original values so the Hero remains
+     * visually stable and premium.
+     */
+    const scrollRotationX = scroll * 0.55;
+    const scrollRotationY = scroll * 0.9;
+
+    /*
+     * ------------------------------------------------------------
+     * TARGET ROTATION
+     * ------------------------------------------------------------
+     */
+    const targetRotationX =
+      pointerRotationX +
+      scrollRotationX +
+      idleRotationX;
+
+    const targetRotationY =
+      pointerRotationY +
+      scrollRotationY +
+      idleRotationY;
+
+    /*
+     * ------------------------------------------------------------
+     * SCROLL POSITION
+     * ------------------------------------------------------------
+     * The sphere moves slightly as the visitor leaves the Hero.
+     *
+     * Keep this subtle so it doesn't collide visually with the
+     * typography or appear to fly away.
+     */
+    const targetPositionX = scroll * 0.65;
+    const targetPositionY = -scroll * 0.28;
+
+    /*
+     * ------------------------------------------------------------
+     * SCROLL VELOCITY
+     * ------------------------------------------------------------
+     * Give fast scrolling a tiny rotational impulse.
+     *
+     * This makes the object feel physically responsive without
+     * producing a distracting spin.
+     */
     const velocityImpulse = THREE.MathUtils.clamp(
-      velocity * 0.0022,
-      -0.12,
-      0.12,
+      velocity * 0.0015,
+      -0.075,
+      0.075,
     );
 
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(
-      groupRef.current.rotation.x,
+    /*
+     * ------------------------------------------------------------
+     * SUBTLE SCALE
+     * ------------------------------------------------------------
+     * The sphere becomes just slightly smaller as the user leaves
+     * the Hero.
+     */
+    const targetScale = THREE.MathUtils.lerp(
+      1,
+      0.94,
+      scroll,
+    );
+
+    /*
+     * ------------------------------------------------------------
+     * SMOOTH ROTATION
+     * ------------------------------------------------------------
+     */
+    group.rotation.x = THREE.MathUtils.lerp(
+      group.rotation.x,
       targetRotationX,
-      0.04,
+      0.045,
     );
 
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(
-      groupRef.current.rotation.y,
+    group.rotation.y = THREE.MathUtils.lerp(
+      group.rotation.y,
       targetRotationY,
-      0.04,
+      0.045,
     );
 
-    groupRef.current.rotation.z = THREE.MathUtils.lerp(
-      groupRef.current.rotation.z,
+    group.rotation.z = THREE.MathUtils.lerp(
+      group.rotation.z,
       velocityImpulse,
-      0.08,
+      0.075,
     );
 
-    groupRef.current.position.x = THREE.MathUtils.lerp(
-      groupRef.current.position.x,
+    /*
+     * ------------------------------------------------------------
+     * SMOOTH POSITION
+     * ------------------------------------------------------------
+     */
+    group.position.x = THREE.MathUtils.lerp(
+      group.position.x,
       targetPositionX,
-      0.04,
+      0.045,
     );
 
-    groupRef.current.position.y = THREE.MathUtils.lerp(
-      groupRef.current.position.y,
-      targetPositionY,
-      0.04,
+    group.position.y = THREE.MathUtils.lerp(
+      group.position.y,
+      targetPositionY + idlePositionY,
+      0.045,
     );
 
-    coreRef.current.rotation.x = time * 0.16;
-    coreRef.current.rotation.y = time * 0.2;
+    /*
+     * ------------------------------------------------------------
+     * SMOOTH SCALE
+     * ------------------------------------------------------------
+     */
+    const currentScale = group.scale.x;
 
-    shellRef.current.rotation.x = -time * 0.12;
-    shellRef.current.rotation.z = time * 0.16;
+    const nextScale = THREE.MathUtils.lerp(
+      currentScale,
+      targetScale,
+      0.045,
+    );
 
-    ringRef.current.rotation.x = time * 0.45;
-    ringRef.current.rotation.y = time * 0.52;
-    ringRef.current.rotation.z = time * 0.28;
-
-    haloRef.current.position.z = -0.35 + Math.sin(time * 1.4) * 0.12;
-
-    const pulse = 1 + Math.sin(time * 1.7) * 0.025;
-    coreRef.current.scale.setScalar(pulse);
-    innerRef.current.scale.setScalar(1.06 + Math.sin(time * 1.3) * 0.04);
-    shellRef.current.scale.setScalar(1.22 + Math.sin(time * 1.1) * 0.03);
+    group.scale.setScalar(nextScale);
   });
 
   return (
     <group ref={groupRef}>
-      <mesh ref={haloRef} position={[0, 0, -0.35]} scale={1.85}>
-        <sphereGeometry args={[1.2, 32, 32]} />
-        <meshBasicMaterial
-          color="#8d7cff"
-          transparent
-          opacity={0.09}
-          depthWrite={false}
-        />
-      </mesh>
-
-      <mesh ref={innerRef} scale={0.82}>
-        <icosahedronGeometry args={[1.3, 2]} />
-        <meshPhysicalMaterial
-          color="#ddd7ff"
-          emissive="#8d7cff"
-          emissiveIntensity={0.9}
-          metalness={0.62}
-          roughness={0.18}
-          transmission={0.18}
-          thickness={1.2}
-          clearcoat={1}
-          clearcoatRoughness={0.18}
-          reflectivity={0.9}
-        />
-      </mesh>
-
-      <mesh ref={coreRef} scale={1.15}>
-        <icosahedronGeometry args={[1.25, 4]} />
-        <meshStandardMaterial
-          color="#9c8cff"
-          emissive="#3d3698"
-          emissiveIntensity={1.8}
-          metalness={0.9}
-          roughness={0.15}
-        />
-      </mesh>
-
-      <mesh ref={shellRef} scale={1.34}>
-        <icosahedronGeometry args={[1.25, 3]} />
-        <meshBasicMaterial
-          color="#c7c1ff"
-          transparent
-          opacity={0.22}
-          wireframe
-        />
-      </mesh>
-
-      <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]} scale={1.28}>
-        <torusGeometry args={[1.5, 0.04, 12, 120]} />
-        <meshBasicMaterial
-          color="#aea3ff"
-          transparent
-          opacity={0.42}
-        />
-      </mesh>
-
-      <mesh scale={1.55}>
-        <sphereGeometry args={[1.3, 32, 32]} />
-        <meshBasicMaterial
-          color="#8d7cff"
-          transparent
-          opacity={0.028}
-          depthWrite={false}
-        />
-      </mesh>
+      <HeroMediaPanel
+        gifSrc={gifSrc}
+        reducedMotion={reducedMotion}
+      />
     </group>
   );
 }

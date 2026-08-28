@@ -3,6 +3,7 @@ import { useState } from "react";
 import { capabilities } from "../../data/capabilities";
 import { useCapabilitiesMotion } from "../../hooks/useCapabilitiesMotion";
 import { useMagnetic } from "../../hooks/useMagnetic";
+import { story } from "../../data/story";
 
 interface CapabilityRowProps {
   capability: (typeof capabilities)[number];
@@ -135,6 +136,7 @@ export default function Capabilities() {
             SYSTEMS.
           </span>
         </h2>
+
       </div>
 
       <div className="capabilities-stage">
@@ -174,6 +176,11 @@ export default function Capabilities() {
           <p>
             {activeCapability.description}
           </p>
+
+          <div className="capability-story-note">
+            <p>{story.systems.transition}</p>
+            <p>{story.systems.detail}</p>
+          </div>
 
           <div className="capability-skills">
             {activeCapability.skills.map(

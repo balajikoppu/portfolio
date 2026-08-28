@@ -11,6 +11,8 @@ import SectionTransition from "./components/transitions/SectionTransition";
 import { transitions } from "./data/transitions";
 import GlobalCursor from "./experience/cursor/GlobalCursor";
 import CommandPalette from "./components/ui/CommandPalette";
+import OpeningScene from "./components/opening/OpeningScene";
+import { useOpeningScene } from "./hooks/useOpeningScene";
 
 import "./styles/global.css";
 
@@ -26,13 +28,23 @@ function App() {
     scrollProgress,
     scrollVelocity,
   } = useExperience();
+  const { active: openingActive, skip: skipOpening } =
+    useOpeningScene(reducedMotion);
   const enhancedWebgl = webgl && quality !== "low";
 
   return (
     <SmoothScroll enabled={!reducedMotion}>
+      <OpeningScene
+        active={openingActive}
+        reducedMotion={reducedMotion}
+        onSkip={skipOpening}
+      />
       <GlobalCursor enabled={finePointer && quality !== "low"} />
       <CommandPalette />
-      <main id="top" className={`site-shell ${experimental ? "is-experimental" : ""}`}>
+      <main
+        id="top"
+        className={`site-shell ${experimental ? "is-experimental" : ""} ${openingActive ? "is-opening" : ""}`}
+      >
         {/* ================================
           NAVIGATION
       ================================= */}
@@ -43,10 +55,18 @@ function App() {
           </a>
 
           <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
-            <a href="#work" onClick={() => setMenuOpen(false)}>WORK</a>
-            <a href="#capabilities" onClick={() => setMenuOpen(false)}>CAPABILITIES</a>
-            <a href="#about" onClick={() => setMenuOpen(false)}>ABOUT</a>
-            <a href="#contact" onClick={() => setMenuOpen(false)}>CONTACT</a>
+            <a href="#work" onClick={() => setMenuOpen(false)}>
+              WORK
+            </a>
+            <a href="#capabilities" onClick={() => setMenuOpen(false)}>
+              CAPABILITIES
+            </a>
+            <a href="#about" onClick={() => setMenuOpen(false)}>
+              ABOUT
+            </a>
+            <a href="#contact" onClick={() => setMenuOpen(false)}>
+              CONTACT
+            </a>
           </div>
 
           <button
@@ -68,7 +88,7 @@ function App() {
         <section className="hero-preview">
           <div className="hero-meta">
             <span>01</span>
-            <span>CREATIVE DEVELOPER / DIGITAL DESIGNER</span>
+            <span>SOFTWARE × AI × SYSTEMS</span>
           </div>
 
           <div className="hero-content">
@@ -85,12 +105,12 @@ function App() {
 
             <div className="hero-bottom">
               <p>
-                I design and engineer systems that feel premium,
+                I started by building interfaces.
                 <br />
-                useful and unmistakably human.
+                Now I&apos;m building the systems behind them.
               </p>
 
-              <a href="#work" className="primary-link" data-cursor="explore">
+              <a href="#work" className="primary-link">
                 <span>Explore work</span>
                 <span>↗</span>
               </a>
@@ -102,7 +122,7 @@ function App() {
         ================================= */}
 
           <div className="hero-object" aria-hidden="true">
-              {enhancedWebgl ? (
+            {enhancedWebgl ? (
               <HeroScene
                 scrollProgress={scrollProgress}
                 scrollVelocity={scrollVelocity}
@@ -136,7 +156,7 @@ function App() {
           reducedMotion={reducedMotion}
           webgl={enhancedWebgl}
         />
-  
+
         <SelectedWork />
 
         <SectionTransition

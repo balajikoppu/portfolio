@@ -70,7 +70,6 @@ export default function SelectedWork() {
               className="project-row"
               key={project.id}
               tabIndex={0}
-              data-cursor="view"
               onPointerEnter={() => setActiveProject(project.id)}
               onPointerLeave={() => setActiveProject(null)}
               onFocus={() => setActiveProject(project.id)}
