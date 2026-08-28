@@ -935,13 +935,13 @@ canvas {
   height: 250px;
   pointer-events: none;
   opacity: 0;
-  transform: translate3d(0, 0, 0) scale(0.92);
-  transition: opacity 300ms var(--ease-out), transform 500ms var(--ease-out);
+  transform: translate3d(0, 0, 0);
+  transition: opacity 300ms var(--ease-out);
+  will-change: transform, opacity;
 }
 
 .project-preview-floating.is-visible {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .project-preview {
@@ -1083,19 +1083,52 @@ canvas {
 .project-row .project-year,
 .project-row .project-arrow {
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
-  transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 800ms var(--ease-out);
 }
 
-.reveal.is-visible .project-row .project-number,
-.reveal.is-visible .project-row .project-category,
-.reveal.is-visible .project-row h3,
-.reveal.is-visible .project-row .project-description,
-.reveal.is-visible .project-row .project-tech,
-.reveal.is-visible .project-row .project-year,
+.reveal.is-visible .project-row .project-number {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 80ms;
+}
+
+.reveal.is-visible .project-row .project-category {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 120ms;
+}
+
+.reveal.is-visible .project-row h3 {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 160ms;
+}
+
+.reveal.is-visible .project-row .project-description {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 210ms;
+}
+
+.reveal.is-visible .project-row .project-tech {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 260ms;
+}
+
+.reveal.is-visible .project-row .project-year {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 300ms;
+}
+
 .reveal.is-visible .project-row .project-arrow {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+  transition-delay: 340ms;
 }
 
 .capabilities-section {
@@ -2582,30 +2615,18 @@ canvas {
     transition-duration: 0.01ms !important;
   }
 
-  .reveal {
-    opacity: 1;
-    transform: none;
-    clip-path: none;
-    transition: none !important;
-  }
-
-  .project-row,
-  .project-row *,
-  .preview-gradient {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
-
+  .reveal,
   .project-row .project-number,
   .project-row .project-category,
   .project-row h3,
   .project-row .project-description,
   .project-row .project-tech,
   .project-row .project-year,
-  .project-row .project-arrow {
-    opacity: 1;
-    transform: none;
+  .project-row .project-arrow,
+  .project-preview-floating {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 
   .capability-word,
@@ -2653,5 +2674,5 @@ canvas {
     transform: none;
   }
 
-}
+  }
 

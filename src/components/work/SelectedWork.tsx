@@ -13,21 +13,37 @@ export default function SelectedWork() {
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let targetX = 0;
+    let targetY = 0;
+
+    let currentX = 0;
+    let currentY = 0;
+
+    let animationFrame = 0;
+
     const handlePointerMove = (event: PointerEvent) => {
-      if (!previewRef.current) {
-        return;
+      targetX = event.clientX + 28;
+      targetY = event.clientY - 180;
+    };
+
+    const animate = () => {
+      currentX += (targetX - currentX) * 0.12;
+      currentY += (targetY - currentY) * 0.12;
+
+      if (previewRef.current) {
+        previewRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
       }
 
-      const x = event.clientX;
-      const y = event.clientY;
-
-      previewRef.current.style.transform = `translate3d(${x + 28}px, ${y - 180}px, 0)`;
+      animationFrame = requestAnimationFrame(animate);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
 
+    animationFrame = requestAnimationFrame(animate);
+
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
+      cancelAnimationFrame(animationFrame);
     };
   }, []);
 
