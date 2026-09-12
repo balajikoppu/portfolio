@@ -1,9 +1,20 @@
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Work from "./components/Work";
+import About from "./components/About"
+import Contact from "./components/Contact"
 
-
-const App = () => {
+export default function App() {
   return (
-    <div>App</div>
-  )
-}
+    <div className="min-h-screen overflow-x-clip bg-[#0C0C0C] text-[#D7E2EA]">
+      <Navbar />
 
-export default App
+      <main>
+        <Hero />
+        <Work />
+        <About />
+        <Contact />
+      </main>
+    </div>
+  );
+}
